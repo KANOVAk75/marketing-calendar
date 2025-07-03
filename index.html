@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Marketing Campaign Calendar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .week-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+        }
+
+        .week-nav {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .week-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .current-week {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 150px repeat(5, 1fr) 140px 140px;
+            gap: 2px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .time-slot {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-right: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .calendar-cell {
+            background: white;
+            padding: 10px;
+            min-height: 60px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-cell:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.02);
+        }
+
+        .task-item {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 6px 10px;
+            margin: 2px 0;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .task-item.content { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+        .task-item.social { background: linear-gradient(45deg, #667eea, #764ba2); }
+        .task-item.email { background: linear-gradient(45deg, #ffeaa7, #fdcb6e); color: #2c3e50; }
+        .task-item.review { background: linear-gradient(45deg, #fd79a8, #e84393); }
+        .task-item.analytics { background: linear-gradient(45deg, #6c5ce7, #a29bfe); }
+        .task-item.tier-aaa { background: linear-gradient(45deg, #2d3436, #636e72); }
+        .task-item.tier-a { background: linear-gradient(45deg, #00b894, #55a3ff); }
+        .task-item.tier-b { background: linear-gradient(45deg, #fdcb6e, #fd79a8); }
+        .task-item.tier-c { background: linear-gradient(45deg, #74b9ff, #0984e3); }
+        .task-item.tone-confident { background: linear-gradient(45deg, #2d3436, #636e72); }
+        .task-item.tone-direct { background: linear-gradient(45deg, #00b894, #55a3ff); }
+        .task-item.tone-welcoming { background: linear-gradient(45deg, #fdcb6e, #fd79a8); }
+        .task-item.tone-inviting { background: linear-gradient(45deg, #74b9ff, #0984e3); }
+        .task-item.planning { background: linear-gradient(45deg, #a29bfe, #6c5ce7); }
+
+        .metrics-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .metric-change {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .metric-change.positive { color: #00b894; }
+        .metric-change.negative { color: #e17055; }
+
+        .campaign-tracker {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .campaign-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .campaign-status {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-active { background: #00b894; color: white; }
+        .status-planning { background: #fdcb6e; color: #2c3e50; }
+        .status-review { background: #fd79a8; color: white; }
+
+        .asset-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .asset-card {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .asset-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .asset-type {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .asset-deadline {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .checklist {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #667eea;
+            border-radius: 4px;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox.checked {
+            background: #667eea;
+            position: relative;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .add-task-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .add-task-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .floating-actions {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: 100px repeat(3, 1fr);
+            }
+            
+            .metrics-dashboard {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .week-selector {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Weekly Marketing Campaign Calendar</h1>
+            <p style="color: #666; font-size: 16px; margin-top: 10px;">Your complete marketing command center for efficient campaign management</p>
+        </div>
+
+        <div class="week-selector">
+            <button class="week-nav" onclick="changeWeek(-1)">← Previous Week</button>
+            <div class="current-week" id="currentWeek">Week of Jan 6-12, 2025</div>
+            <button class="week-nav" onclick="changeWeek(1)">Next Week →</button>
+        </div>
+
+        <div class="metrics-dashboard">
+            <div class="metric-card">
+                <div class="metric-value">127%</div>
+                <div class="metric-label">ROI This Week</div>
+                <div class="metric-change positive">↑ 12% from last week</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">15.3K</div>
+                <div class="metric-label">Brand Impressions</div>
+                <div class="metric-change positive">↑ 8% from last week</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">4.2%</div>
+                <div class="metric-label">Engagement Rate</div>
+                <div class="metric-change negative">↓ 2% from last week</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">89%</div>
+                <div class="metric-label">Campaign Progress</div>
+                <div class="metric-change positive">On track</div>
+            </div>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="calendar-header">Time</div>
+            <div class="calendar-header">Monday</div>
+            <div class="calendar-header">Tuesday</div>
+            <div class="calendar-header">Wednesday</div>
+            <div class="calendar-header">Thursday</div>
+            <div class="calendar-header">Friday</div>
+            <div class="calendar-header">Customer Tier</div>
+            <div class="calendar-header">Message Tone</div>
+
+            <div class="time-slot">Morning (9-12)</div>
+            <div class="calendar-cell">
+                <div class="task-item content">Technical Guide Draft</div>
+                <div class="task-item email">Power Partner Flyer</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item content">Monthly Service Guide</div>
+                <div class="task-item review">Asset Review</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Campaign Performance</div>
+                <div class="task-item email">Direct Mail Prep</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item content">Seasonal Reminder</div>
+                <div class="task-item review">Tone Check</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Weekly Metrics</div>
+                <div class="task-item content">Reactivation Message</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item tier-aaa">AAA - Power Partners</div>
+                <div class="task-item tier-a">A - Regular Buyers</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item tone-confident">Confident & Experienced</div>
+                <div class="task-item tone-direct">Direct & Informed</div>
+            </div>
+
+            <div class="time-slot">Afternoon (1-5)</div>
+            <div class="calendar-cell">
+                <div class="task-item content">Walk-in Code Promo</div>
+                <div class="task-item email">Category Guide</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item content">Website Banners</div>
+                <div class="task-item review">Message Validation</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Engagement Tracking</div>
+                <div class="task-item content">Printed Insert</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item email">Bi-monthly Service</div>
+                <div class="task-item review">Tone Alignment</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">ROI Analysis</div>
+                <div class="task-item content">Next Week Prep</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item tier-b">B - Seasonal Buyers</div>
+                <div class="task-item tier-c">C - Dormant Accounts</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item tone-welcoming">Matter-of-fact & Welcoming</div>
+                <div class="task-item tone-inviting">Low-pressure & Inviting</div>
+            </div>
+
+            <div class="time-slot">Evening (6-8)</div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Customer Response</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item review">Final Proofing</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Tier Performance</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item review">Message Testing</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item analytics">Weekly Summary</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item planning">Customer Insights</div>
+            </div>
+            <div class="calendar-cell">
+                <div class="task-item planning">Tone Adjustments</div>
+            </div>
+        </div>
+
+        <div class="campaign-tracker">
+            <div class="campaign-header">
+                <div class="campaign-title">Current Campaign: Monthly Technical Solutions</div>
+                <div class="campaign-status status-active">Active</div>
+            </div>
+            <div class="asset-timeline">
+                <div class="asset-card">
+                    <div class="asset-type">Power Partner Flyer (AAA)</div>
+                    <div class="asset-deadline">Due: Jan 10, 2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    <div>Review: Jan 8 | Deploy: Jan 10</div>
+                </div>
+                <div class="asset-card">
+                    <div class="asset-type">Monthly Service Guide (A)</div>
+                    <div class="asset-deadline">Due: Jan 9, 2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 70%"></div>
+                    </div>
+                    <div>Review: Jan 8 | Deploy: Jan 9</div>
+                </div>
+                <div class="asset-card">
+                    <div class="asset-type">Seasonal Reminder (B)</div>
+                    <div class="asset-deadline">Due: Jan 11, 2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                    <div>Review: Jan 10 | Deploy: Jan 11</div>
+                </div>
+                <div class="asset-card">
+                    <div class="asset-type">Reactivation Message (C)</div>
+                    <div class="asset-deadline">Due: Jan 12, 2025</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+                    <div>Review: Jan 11 | Deploy: Jan 12</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checklist">
+            <h3 style="margin-bottom: 20px; color: #2c3e50; font-size: 1.3em;">Weekly Customer Engagement Optimization</h3>
+            <div class="checklist-item">
+                <div class="checkbox checked" onclick="toggleCheck(this)"></div>
+                <div>Validate message tone matches customer tier expectations</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Review response rates by customer segment</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox checked" onclick="toggleCheck(this)"></div>
+                <div>Ensure technical accuracy in all professional communications</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Check walk-in code redemption rates</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Analyze direct mail delivery confirmations</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Update customer tier classifications based on recent activity</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Prepare next week's customer-specific messaging</div>
+            </div>
+            <div class="checklist-item">
+                <div class="checkbox" onclick="toggleCheck(this)"></div>
+                <div>Review reactivation campaign effectiveness</div>
+            </div>
+            <button class="add-task-btn" onclick="addTask()">+ Add Customer Engagement Task</button>
+        </div>
+    </div>
+
+    <div class="floating-actions">
+        <button class="fab" onclick="exportCalendar()" title="Export Calendar">📊</button>
+        <button class="fab" onclick="addQuickTask()" title="Quick Add Task">+</button>
+    </div>
+
+    <script>
+        let currentWeekStart = new Date('2025-01-06');
+        
+        function changeWeek(direction) {
+            currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
+            updateWeekDisplay();
+        }
+        
+        function updateWeekDisplay() {
+            const weekEnd = new Date(currentWeekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6);
+            
+            const startStr = currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const endStr = weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            
+            document.getElementById('currentWeek').textContent = `Week of ${startStr} - ${endStr}, 2025`;
+        }
+        
+        function toggleCheck(checkbox) {
+            checkbox.classList.toggle('checked');
+        }
+        
+        function addTask() {
+            const taskText = prompt('Enter new optimization task:');
+            if (taskText) {
+                const checklistItem = document.createElement('div');
+                checklistItem.className = 'checklist-item';
+                checklistItem.innerHTML = `
+                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                    <div>${taskText}</div>
+                `;
+                document.querySelector('.checklist').insertBefore(checklistItem, document.querySelector('.add-task-btn'));
+            }
+        }
+        
+        function addQuickTask() {
+            const task = prompt('Quick task (format: "Task | Channel | Day"):');
+            if (task) {
+                alert('Task added to calendar! (In a real implementation, this would add to the appropriate day/channel)');
+            }
+        }
+        
+        function exportCalendar() {
+            alert('Calendar exported! (In a real implementation, this would export to CSV/Excel)');
+        }
+        
+        // Initialize the calendar
+        updateWeekDisplay();
+        
+        // Add some interactive effects
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const details = prompt('Task details:', this.textContent);
+                if (details) {
+                    this.textContent = details;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
