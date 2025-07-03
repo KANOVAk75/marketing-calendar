@@ -114,12 +114,17 @@
             font-weight: 600;
             color: #2c3e50;
             border-right: 2px solid rgba(102, 126, 234, 0.2);
+            min-height: 80px; /* Adjust height for new time slots */
+            display: flex; /* To center content vertically if needed */
+            align-items: center; /* To center content vertically if needed */
+            justify-content: center; /* To center content horizontally if needed */
+            text-align: center; /* Ensure text alignment for multi-line */
         }
 
         .calendar-cell {
             background: white;
             padding: 10px;
-            min-height: 60px;
+            min-height: 80px; /* Match time-slot height */
             border: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
             transition: all 0.3s ease;
@@ -396,7 +401,7 @@
 
         <div class="week-selector">
             <button class="week-nav" onclick="changeWeek(-1)">← Previous Week</button>
-            <div class="current-week" id="currentWeek">Week of Jan 6-12, 2025</div>
+            <div class="current-week" id="currentWeek">Week of July 8-14, 2025</div>
             <button class="week-nav" onclick="changeWeek(1)">Next Week →</button>
         </div>
 
@@ -433,7 +438,7 @@
             <div class="calendar-header">Customer Tier</div>
             <div class="calendar-header">Message Tone</div>
 
-            <div class="time-slot">Morning (9-12)</div>
+            <div class="time-slot">Morning (7:30 AM - 12:00 PM)</div>
             <div class="calendar-cell">
                 <div class="task-item content">Technical Guide Draft</div>
                 <div class="task-item email">Power Partner Flyer</div>
@@ -463,7 +468,8 @@
                 <div class="task-item tone-direct">Direct & Informed</div>
             </div>
 
-            <div class="time-slot">Afternoon (1-5)</div>
+            <div class="time-slot">Lunch Break (12:00 PM - 1:00 PM)</div>
+            <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="time-slot">Afternoon (1:00 PM - 4:40 PM)</div>
             <div class="calendar-cell">
                 <div class="task-item content">Walk-in Code Promo</div>
                 <div class="task-item email">Category Guide</div>
@@ -493,7 +499,7 @@
                 <div class="task-item tone-inviting">Low-pressure & Inviting</div>
             </div>
 
-            <div class="time-slot">Evening (6-8)</div>
+            <div class="time-slot">Evening (4:40 PM onwards)</div>
             <div class="calendar-cell">
                 <div class="task-item analytics">Customer Response</div>
             </div>
@@ -525,35 +531,35 @@
             <div class="asset-timeline">
                 <div class="asset-card">
                     <div class="asset-type">Power Partner Flyer (AAA)</div>
-                    <div class="asset-deadline">Due: Jan 10, 2025</div>
+                    <div class="asset-deadline">Due: July 10, 2025</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 85%"></div>
                     </div>
-                    <div>Review: Jan 8 | Deploy: Jan 10</div>
+                    <div>Review: July 8 | Deploy: July 10</div>
                 </div>
                 <div class="asset-card">
                     <div class="asset-type">Monthly Service Guide (A)</div>
-                    <div class="asset-deadline">Due: Jan 9, 2025</div>
+                    <div class="asset-deadline">Due: July 9, 2025</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 70%"></div>
                     </div>
-                    <div>Review: Jan 8 | Deploy: Jan 9</div>
+                    <div>Review: July 8 | Deploy: July 9</div>
                 </div>
                 <div class="asset-card">
                     <div class="asset-type">Seasonal Reminder (B)</div>
-                    <div class="asset-deadline">Due: Jan 11, 2025</div>
+                    <div class="asset-deadline">Due: July 11, 2025</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 45%"></div>
                     </div>
-                    <div>Review: Jan 10 | Deploy: Jan 11</div>
+                    <div>Review: July 10 | Deploy: July 11</div>
                 </div>
                 <div class="asset-card">
                     <div class="asset-type">Reactivation Message (C)</div>
-                    <div class="asset-deadline">Due: Jan 12, 2025</div>
+                    <div class="asset-deadline">Due: July 12, 2025</div>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: 30%"></div>
                     </div>
-                    <div>Review: Jan 11 | Deploy: Jan 12</div>
+                    <div>Review: July 11 | Deploy: July 12</div>
                 </div>
             </div>
         </div>
@@ -602,7 +608,10 @@
     </div>
 
     <script>
-        let currentWeekStart = new Date('2025-01-06');
+        // Set the start date to Monday, July 8, 2025
+        // We set it to July 7th so that when updateWeekDisplay runs, it correctly
+        // calculates the start of the week as July 8th (Monday).
+        let currentWeekStart = new Date('2025-07-07T00:00:00'); 
         
         function changeWeek(direction) {
             currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
@@ -610,13 +619,25 @@
         }
         
         function updateWeekDisplay() {
-            const weekEnd = new Date(currentWeekStart);
-            weekEnd.setDate(weekEnd.getDate() + 6);
+            const weekStart = new Date(currentWeekStart);
+            // Ensure the week starts on a Monday if currentWeekStart is manipulated
+            // For now, assuming currentWeekStart is already set to the start of the week.
+            // If you want robust "find next Monday" logic, it's more complex.
+            // For this specific request, we set currentWeekStart to 2025-07-07 (a Monday for 2025-07-08 week).
+
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 6); // Add 6 days to get to Sunday
+
+            // If currentWeekStart is actually a Sunday (from initial setting) and you want Monday to be the displayed start:
+            if (weekStart.getDay() !== 1) { // 1 is Monday
+                weekStart.setDate(weekStart.getDate() + (1 - weekStart.getDay() + 7) % 7);
+                weekEnd.setDate(weekStart.getDate() + 6);
+            }
             
-            const startStr = currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const startStr = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             const endStr = weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             
-            document.getElementById('currentWeek').textContent = `Week of ${startStr} - ${endStr}, 2025`;
+            document.getElementById('currentWeek').textContent = `Week of ${startStr} - ${endStr}, ${weekStart.getFullYear()}`;
         }
         
         function toggleCheck(checkbox) {
@@ -650,7 +671,7 @@
         // Initialize the calendar
         updateWeekDisplay();
         
-        // Add some interactive effects
+        // Add some interactive effects for task-items
         document.querySelectorAll('.task-item').forEach(item => {
             item.addEventListener('click', function() {
                 const details = prompt('Task details:', this.textContent);
