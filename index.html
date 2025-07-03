@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Marketing Campaign Calendar</title>
     <style>
+        /* General Styles */
         * {
             margin: 0;
             padding: 0;
@@ -16,10 +17,14 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for longer content */
         }
 
         .container {
             max-width: 1400px;
+            width: 100%; /* Ensure it takes full width on smaller screens */
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -28,6 +33,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
+        /* Header */
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -53,6 +59,7 @@
             font-weight: 700;
         }
 
+        /* Week Selector */
         .week-selector {
             display: flex;
             justify-content: center;
@@ -89,9 +96,11 @@
             min-width: 200px;
         }
 
+        /* Calendar Grid */
         .calendar-grid {
+            /* Adjusted: Removed the two extra columns for Customer Tier and Message Tone */
+            grid-template-columns: 150px repeat(5, 1fr); /* Time + 5 days */
             display: grid;
-            grid-template-columns: 150px repeat(5, 1fr) 140px 140px;
             gap: 2px;
             margin-bottom: 30px;
             border-radius: 15px;
@@ -115,10 +124,10 @@
             color: #2c3e50;
             border-right: 2px solid rgba(102, 126, 234, 0.2);
             min-height: 80px; /* Adjust height for new time slots */
-            display: flex; /* To center content vertically if needed */
-            align-items: center; /* To center content vertically if needed */
-            justify-content: center; /* To center content horizontally if needed */
-            text-align: center; /* Ensure text alignment for multi-line */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .calendar-cell {
@@ -135,6 +144,7 @@
             transform: scale(1.02);
         }
 
+        /* Task Items */
         .task-item {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
@@ -152,6 +162,7 @@
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
         }
 
+        /* Task Item Categories (colors) */
         .task-item.content { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
         .task-item.social { background: linear-gradient(45deg, #667eea, #764ba2); }
         .task-item.email { background: linear-gradient(45deg, #ffeaa7, #fdcb6e); color: #2c3e50; }
@@ -167,6 +178,7 @@
         .task-item.tone-inviting { background: linear-gradient(45deg, #74b9ff, #0984e3); }
         .task-item.planning { background: linear-gradient(45deg, #a29bfe, #6c5ce7); }
 
+        /* Metrics Dashboard */
         .metrics-dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -210,6 +222,7 @@
         .metric-change.positive { color: #00b894; }
         .metric-change.negative { color: #e17055; }
 
+        /* Campaign Tracker */
         .campaign-tracker {
             background: white;
             padding: 25px;
@@ -288,6 +301,7 @@
             transition: width 0.3s ease;
         }
 
+        /* Checklist */
         .checklist {
             background: white;
             padding: 25px;
@@ -349,6 +363,7 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
+        /* Floating Actions */
         .floating-actions {
             position: fixed;
             bottom: 30px;
@@ -356,6 +371,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            z-index: 1000; /* Ensure it stays on top */
         }
 
         .fab {
@@ -376,9 +392,10 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
 
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .calendar-grid {
-                grid-template-columns: 100px repeat(3, 1fr);
+                grid-template-columns: 100px repeat(3, 1fr); /* Adjust for smaller screens */
             }
             
             .metrics-dashboard {
@@ -401,7 +418,7 @@
 
         <div class="week-selector">
             <button class="week-nav" onclick="changeWeek(-1)">← Previous Week</button>
-            <div class="current-week" id="currentWeek">Week of July 8-14, 2025</div>
+            <div class="current-week" id="currentWeek"></div> <!-- Will be updated by JS -->
             <button class="week-nav" onclick="changeWeek(1)">Next Week →</button>
         </div>
 
@@ -428,144 +445,32 @@
             </div>
         </div>
 
-        <div class="calendar-grid">
+        <div class="calendar-grid" id="calendarGrid">
+            <!-- Calendar Headers -->
             <div class="calendar-header">Time</div>
             <div class="calendar-header">Monday</div>
             <div class="calendar-header">Tuesday</div>
             <div class="calendar-header">Wednesday</div>
             <div class="calendar-header">Thursday</div>
             <div class="calendar-header">Friday</div>
-            <div class="calendar-header">Customer Tier</div>
-            <div class="calendar-header">Message Tone</div>
+            <!-- Removed Customer Tier and Message Tone Headers -->
 
-            <div class="time-slot">Morning (7:30 AM - 12:00 PM)</div>
-            <div class="calendar-cell">
-                <div class="task-item content">Technical Guide Draft</div>
-                <div class="task-item email">Power Partner Flyer</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item content">Monthly Service Guide</div>
-                <div class="task-item review">Asset Review</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Campaign Performance</div>
-                <div class="task-item email">Direct Mail Prep</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item content">Seasonal Reminder</div>
-                <div class="task-item review">Tone Check</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Weekly Metrics</div>
-                <div class="task-item content">Reactivation Message</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item tier-aaa">AAA - Power Partners</div>
-                <div class="task-item tier-a">A - Regular Buyers</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item tone-confident">Confident & Experienced</div>
-                <div class="task-item tone-direct">Direct & Informed</div>
-            </div>
-
-            <div class="time-slot">Lunch Break (12:00 PM - 1:00 PM)</div>
-            <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="calendar-cell"></div> <div class="time-slot">Afternoon (1:00 PM - 4:40 PM)</div>
-            <div class="calendar-cell">
-                <div class="task-item content">Walk-in Code Promo</div>
-                <div class="task-item email">Category Guide</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item content">Website Banners</div>
-                <div class="task-item review">Message Validation</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Engagement Tracking</div>
-                <div class="task-item content">Printed Insert</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item email">Bi-monthly Service</div>
-                <div class="task-item review">Tone Alignment</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">ROI Analysis</div>
-                <div class="task-item content">Next Week Prep</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item tier-b">B - Seasonal Buyers</div>
-                <div class="task-item tier-c">C - Dormant Accounts</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item tone-welcoming">Matter-of-fact & Welcoming</div>
-                <div class="task-item tone-inviting">Low-pressure & Inviting</div>
-            </div>
-
-            <div class="time-slot">Evening (4:40 PM onwards)</div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Customer Response</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item review">Final Proofing</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Tier Performance</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item review">Message Testing</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item analytics">Weekly Summary</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item planning">Customer Insights</div>
-            </div>
-            <div class="calendar-cell">
-                <div class="task-item planning">Tone Adjustments</div>
-            </div>
+            <!-- Calendar content will be dynamically generated by JavaScript -->
         </div>
 
         <div class="campaign-tracker">
             <div class="campaign-header">
-                <div class="campaign-title">Current Campaign: Monthly Technical Solutions</div>
-                <div class="campaign-status status-active">Active</div>
+                <div class="campaign-title">Current Campaign: <span id="currentCampaignTitle">Monthly Technical Solutions</span></div>
+                <div class="campaign-status status-active" id="currentCampaignStatus">Active</div>
             </div>
-            <div class="asset-timeline">
-                <div class="asset-card">
-                    <div class="asset-type">Power Partner Flyer (AAA)</div>
-                    <div class="asset-deadline">Due: July 10, 2025</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 85%"></div>
-                    </div>
-                    <div>Review: July 8 | Deploy: July 10</div>
-                </div>
-                <div class="asset-card">
-                    <div class="asset-type">Monthly Service Guide (A)</div>
-                    <div class="asset-deadline">Due: July 9, 2025</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 70%"></div>
-                    </div>
-                    <div>Review: July 8 | Deploy: July 9</div>
-                </div>
-                <div class="asset-card">
-                    <div class="asset-type">Seasonal Reminder (B)</div>
-                    <div class="asset-deadline">Due: July 11, 2025</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 45%"></div>
-                    </div>
-                    <div>Review: July 10 | Deploy: July 11</div>
-                </div>
-                <div class="asset-card">
-                    <div class="asset-type">Reactivation Message (C)</div>
-                    <div class="asset-deadline">Due: July 12, 2025</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 30%"></div>
-                    </div>
-                    <div>Review: July 11 | Deploy: July 12</div>
-                </div>
+            <div class="asset-timeline" id="assetTimeline">
+                <!-- Asset cards will be dynamically generated by JavaScript -->
             </div>
         </div>
 
         <div class="checklist">
             <h3 style="margin-bottom: 20px; color: #2c3e50; font-size: 1.3em;">Weekly Customer Engagement Optimization</h3>
+            <!-- Checklist items will be dynamically loaded/added -->
             <div class="checklist-item">
                 <div class="checkbox checked" onclick="toggleCheck(this)"></div>
                 <div>Validate message tone matches customer tier expectations</div>
@@ -608,40 +513,964 @@
     </div>
 
     <script>
-        // Set the start date to Monday, July 8, 2025
-        // We set it to July 7th so that when updateWeekDisplay runs, it correctly
-        // calculates the start of the week as July 8th (Monday).
-        let currentWeekStart = new Date('2025-07-07T00:00:00'); 
-        
+        // --- Data Definitions ---
+        const CAMPAIGN_DATA = {
+            "2025-07-07": { // Week starting Monday, July 8, 2025 (Date object for July 7th will yield July 8th as Monday)
+                campaignTitle: "Monthly Technical Solutions: Driveline Spotlight",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "Driveline Print Flyer", deadline: "July 10, 2025", progress: 85, review: "July 8", deploy: "July 10" },
+                    { type: "Website Banner (Driveline)", deadline: "July 8, 2025", progress: 90, review: "July 8", deploy: "July 8" },
+                    { type: "Email Series Part 1 (Driveline)", deadline: "July 9, 2025", progress: 70, review: "July 8", deploy: "July 9" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Update Store Screens (Driveline)", type: "content" },
+                            { text: "Draft Driveline Guide", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: Driveline Service Intro (AAA/A/B, Confident)", type: "email" },
+                            { text: "FB Post: Driveline Tips (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review Driveline Guide (General, Direct)", type: "review" },
+                            { text: "Prep Direct Mail for C-Tier (C, Inviting)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: Driveline Benefits (AAA/A, Confident)", type: "email" },
+                            { text: "FB Post: Shop Walkthrough (A/B, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review Weekly Metrics (General, Direct)", type: "analytics" },
+                            { text: "Prepare Next Week's Assets (General, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {}, // Empty for lunch
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Website Banner Deployment (General, Direct)", type: "content" },
+                            { text: "Walk-in Guide Prep (Driveline) (Walk-ins, Welcoming)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review Email Performance (General, Analytics)", type: "analytics" },
+                            { text: "Social Media Engagement (General, Welcoming)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Direct Mail Content Finalization (C, Inviting)", type: "email" },
+                            { text: "Campaign Performance Review (General, Analytics)", type: "analytics" }
+                        ],
+                        "Thursday": [
+                            { text: "Email Series Part 2 Draft (AAA/A, Confident)", type: "email" },
+                            { text: "Review Social Ad Performance (General, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Final Proofing for Next Week (General, Review)", type: "review" },
+                            { text: "Customer Insights Analysis (General, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Customer Response Analysis (General, Analytics)", type: "analytics" } ],
+                        "Tuesday": [ { text: "Final Proofing for Email (General, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Tier Performance Review (General, Analytics)", type: "analytics" } ],
+                        "Thursday": [ { text: "Message Testing (General, Review)", type: "review" } ],
+                        "Friday": [ { text: "Weekly Summary Report (General, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-07-14": { // Week starting Monday, July 15, 2025
+                campaignTitle: "Monthly Technical Solutions: Driveline Spotlight (Cont.)",
+                campaignStatus: "Active",
+                 assets: [
+                    { type: "Email Series Part 2 (Driveline)", deadline: "July 16, 2025", progress: 95, review: "July 15", deploy: "July 16" },
+                    { type: "Driveline Service Guide", deadline: "July 17, 2025", progress: 80, review: "July 16", deploy: "July 17" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Review Driveline Campaign Performance (General, Analytics)", type: "analytics" },
+                            { text: "Plan next Driveline FB Live (General, Planning)", type: "social" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: Driveline Maintenance Tips (AAA/A/B, Direct)", type: "email" },
+                            { text: "FB Post: Driveline Q&A (General, Welcoming)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Draft Driveline Service Guide content (General, Content)", type: "content" },
+                            { text: "Analyze Email Series Part 1 (General, Analytics)", type: "analytics" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: Driveline Special Offer (AAA/A, Confident)", type: "email" },
+                            { text: "FB Post: Customer Testimonial (Driveline) (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review Week's ROI (General, Analytics)", type: "analytics" },
+                            { text: "Prep for next week's activities (General, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Update Website Banners (Driveline) (General, Content)", type: "content" },
+                            { text: "Prepare in-store Driveline signage (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Social Media Engagement (General, Social)", type: "social" },
+                            { text: "Respond to Driveline inquiries (General, Email)", type: "email" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review Driveline Service Guide Draft (General, Review)", type: "review" },
+                            { text: "Coordinate with Service Team on Driveline (General, Planning)", type: "planning" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize Email Special Offer (AAA/A, Review)", type: "email" },
+                            { text: "Review FB Ad Performance (General, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile Weekly Campaign Summary (General, Analytics)", type: "analytics" },
+                            { text: "Plan content for upcoming weeks (General, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Customer Feedback Analysis (General, Analytics)", type: "analytics" } ],
+                        "Tuesday": [ { text: "Email Campaign Review (General, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Service Guide Proofing (General, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Ad Campaign Optimization (General, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Weekly Performance Report (General, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-07-21": { // Week starting Monday, July 22, 2025 (Detailed from your file)
+                campaignTitle: "Monthly Technical Solutions: Driveline Spotlight (Final Push)",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "Driveline Service Spotlight Email #3", deadline: "July 25, 2025", progress: 90, review: "July 24", deploy: "July 25" },
+                    { type: "Direct Mail Postcard (Sept)", deadline: "July 23, 2025", progress: 75, review: "July 22", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Update Store Screens (Driveline) (Walk-ins, Direct)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Draft Direct Mail postcard content for Sept (C, Inviting)", type: "email" }
+                        ],
+                        "Wednesday": [
+                            { text: "Facebook Live: Shop Walkthrough (A/B, Welcoming)", type: "social" }
+                        ],
+                        "Thursday": [
+                            { text: "Service Spotlight Email #3 (Driveline) (AAA/A/B, Confident)", type: "email" }
+                        ],
+                        "Friday": [
+                            { text: "Review Google Ads Progress (Overall, Analytics)", type: "analytics" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [],
+                        "Tuesday": [],
+                        "Wednesday": [],
+                        "Thursday": [],
+                        "Friday": []
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [],
+                        "Tuesday": [],
+                        "Wednesday": [],
+                        "Thursday": [],
+                        "Friday": []
+                    }
+                }
+            },
+            "2025-07-28": { // Week starting Monday, July 29, 2025 (Extrapolated, end of July)
+                campaignTitle: "Monthly Technical Solutions: Driveline Wrap-up & August Prep",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "Driveline Campaign Performance Report", deadline: "Aug 2, 2025", progress: 60, review: "Aug 1", deploy: "N/A" },
+                    { type: "August Power Partner Flyer Draft", deadline: "Aug 1, 2025", progress: 40, review: "July 31", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Final Driveline Campaign Analytics (Overall, Analytics)", type: "analytics" },
+                            { text: "Begin August Campaign Planning (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Draft August Power Partner Email (AAA, Confident)", type: "email" },
+                            { text: "FB Post: Quick Driveline Tip Recap (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review August Campaign Assets (Overall, Review)", type: "review" },
+                            { text: "Coordinate August Direct Mail (C, Inviting)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: August Service Preview (General, Welcoming)", type: "email" },
+                            { text: "FB Post: August Campaign Teaser (General, Inviting)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Compile July Performance Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Finalize August Kick-off Plan (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare July ROI Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline August Service Guide (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review Power Partner Flyer Draft (AAA, Review)", type: "review" },
+                            { text: "Update Website Banner (August Preview) (General, Content)", type: "content" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize August Campaign Messaging (Overall, Review)", type: "review" },
+                            { text: "Prepare August Store Screens (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Review August Email Drafts (Overall, Review)", type: "review" },
+                            { text: "Plan August Social Media Calendar (Overall, Social)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Distribute July Summary to Management (Overall, Analytics)", type: "analytics" },
+                            { text: "Set up August Tracking (Overall, Analytics)", type: "analytics" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Future Campaign Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "Asset Review (August) (Overall, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Campaign Strategy Refinement (Overall, Planning)", type: "planning" } ],
+                        "Thursday": [ { text: "Ad Performance Review (Overall, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Weekend Prep (Overall, Planning)", type: "planning" } ]
+                    }
+                }
+            },
+            "2025-08-04": { // Week starting Monday, August 4, 2025 (Extrapolated for August)
+                campaignTitle: "August Campaign: PM/Brakes Service Focus",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "Power Partner Flyer (August)", deadline: "Aug 5, 2025", progress: 90, review: "Aug 4", deploy: "Aug 5" },
+                    { type: "Tool Flyer (August)", deadline: "Aug 6, 2025", progress: 85, review: "Aug 5", deploy: "Aug 6" },
+                    { type: "Safety Guide (August)", deadline: "Aug 15, 2025", progress: 50, review: "Aug 12", deploy: "Aug 15" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Deploy Power Partner Flyer (AAA, Confident)", type: "content" },
+                            { text: "Update Website Banner (Brakes) (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: PM/Brakes Intro (AAA/A/B, Direct)", type: "email" },
+                            { text: "FB Post: Brakes Safety Tip (General, Welcoming)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Draft Safety Guide Content (General, Content)", type: "content" },
+                            { text: "Review August Email Series (General, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: Brakes Benefits (AAA/A, Confident)", type: "email" },
+                            { text: "FB Post: Tool Spotlight (General, Direct)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review Weekly Metrics (August) (Overall, Analytics)", type: "analytics" },
+                            { text: "Distribute Tool Flyers (Walk-ins, Content)", type: "content" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Coordinate Power Partner Distribution (AAA, Planning)", type: "planning" },
+                            { text: "Prepare Store Screens (Brakes) (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Email Performance (Brakes) (Overall, Analytics)", type: "analytics" },
+                            { text: "Respond to Social Media Inquiries (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review Safety Guide Draft (General, Review)", type: "review" },
+                            { text: "Plan August Direct Mail (C-Tier) (C, Planning)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize Brakes Email Series Part 2 (AAA/A, Review)", type: "email" },
+                            { text: "Analyze FB Ad Performance (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile August Mid-Month Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Prep for next week's content (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Campaign Asset Review (Overall, Review)", type: "review" } ],
+                        "Tuesday": [ { text: "Email Content Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Wednesday": [ { text: "Safety Guide Proofing (Overall, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Strategy Review (Overall, Social)", type: "social" } ],
+                        "Friday": [ { text: "Weekly Performance Review (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-08-11": { // Week starting Monday, August 11, 2025 (Extrapolated for August)
+                campaignTitle: "August Campaign: PM/Brakes Service Focus (Cont.)",
+                campaignStatus: "Active",
+                 assets: [
+                    { type: "Email Series Part 3 (Brakes)", deadline: "Aug 14, 2025", progress: 70, review: "Aug 13", deploy: "Aug 14" },
+                    { type: "Direct Mail (C-Tier) Content", deadline: "Aug 15, 2025", progress: 60, review: "Aug 14", deploy: "Aug 15" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Review Brakes Campaign Metrics (Overall, Analytics)", type: "analytics" },
+                            { text: "Plan Direct Mail Distribution (C, Planning)", type: "email" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: Brakes Importance (A/B, Welcoming)", type: "email" },
+                            { text: "FB Post: Brakes Service Walkthrough (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize Direct Mail Content (C, Inviting)", type: "email" },
+                            { text: "Prepare Safety Guide for Deployment (General, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: Last Call for Brakes Offer (AAA/A, Confident)", type: "email" },
+                            { text: "FB Post: Customer Success Story (Brakes) (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review August Mid-Month ROI (Overall, Analytics)", type: "analytics" },
+                            { text: "Prep for HVAC Campaign Planning (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Update Website Banners (Safety Guide) (General, Content)", type: "content" },
+                            { text: "Prepare In-store Safety Guide displays (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Email Engagement (Brakes) (Overall, Analytics)", type: "analytics" },
+                            { text: "Engage with FB Comments (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Coordinate Direct Mail Send-off (C, Planning)", type: "email" },
+                            { text: "Review Safety Guide Deployment Plan (General, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize Brakes Email Series Part 3 (AAA/A, Review)", type: "email" },
+                            { text: "Review Social Media Campaign Performance (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile August Performance Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline September HVAC Campaign (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Direct Mail Strategy Review (C, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "Email Content Optimization (Overall, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Safety Guide Final Check (Overall, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Ad Review (Overall, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Monthly Campaign Review (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-08-18": { // Week starting Monday, August 18, 2025 (Extrapolated for August)
+                campaignTitle: "August Campaign: PM/Brakes Service Focus (Wrap-up) & HVAC Prep",
+                campaignStatus: "Active",
+                 assets: [
+                    { type: "August Campaign Performance Report", deadline: "Aug 22, 2025", progress: 50, review: "Aug 21", deploy: "N/A" },
+                    { type: "HVAC Service Guide Draft", deadline: "Aug 23, 2025", progress: 30, review: "Aug 22", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Final August Campaign Analytics (Overall, Analytics)", type: "analytics" },
+                            { text: "Begin September HVAC Campaign Planning (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Draft HVAC Service Email Part 1 (General, Direct)", type: "email" },
+                            { text: "FB Post: Brakes Recap (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review HVAC Service Guide Outline (General, Review)", type: "review" },
+                            { text: "Coordinate September Direct Mail (C, Planning)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: HVAC System Basics (General, Welcoming)", type: "email" },
+                            { text: "FB Post: HVAC FAQs (General, Informative)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Compile August Performance Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Finalize September Kick-off Plan (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare August ROI Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline HVAC Website Banner content (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review HVAC Email Drafts (General, Review)", type: "review" },
+                            { text: "Update Website Banner (HVAC Preview) (General, Content)", type: "content" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize HVAC Campaign Messaging (Overall, Review)", type: "review" },
+                            { text: "Prepare HVAC Store Screens (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Review HVAC Service Guide Draft (General, Review)", type: "review" },
+                            { text: "Plan September Social Media Calendar (Overall, Social)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Distribute August Summary to Management (Overall, Analytics)", type: "analytics" },
+                            { text: "Set up September Tracking (Overall, Analytics)", type: "analytics" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Next Month's Strategy Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "HVAC Asset Review (Overall, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Campaign Strategy Refinement (Overall, Planning)", type: "planning" } ],
+                        "Thursday": [ { text: "Ad Performance Review (Overall, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Weekend Prep (Overall, Planning)", type: "planning" } ]
+                    }
+                }
+            },
+            "2025-08-25": { // Week starting Monday, August 25, 2025 (Extrapolated for August)
+                campaignTitle: "August Campaign: PM/Brakes Service Focus (Final) & September Prep",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "August Final Performance Report", deadline: "Aug 29, 2025", progress: 70, review: "Aug 28", deploy: "N/A" },
+                    { type: "September HVAC Service Guide Finalization", deadline: "Aug 28, 2025", progress: 60, review: "Aug 27", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Review August Final Metrics (Overall, Analytics)", type: "analytics" },
+                            { text: "Kick-off September HVAC Campaign (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: August Wrap-up/September Tease (General, Welcoming)", type: "email" },
+                            { text: "FB Post: August Highlights (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize September Direct Mail Content (C, Inviting)", type: "email" },
+                            { text: "Prepare September Store Screens (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: HVAC Service Introduction (General, Confident)", type: "email" },
+                            { text: "FB Post: HVAC Benefits (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Compile August Final Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Set up September Campaign Tracking (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare August Campaign Summary for Leadership (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline September Website Content (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review September Email Drafts (General, Review)", type: "review" },
+                            { text: "Update Website Banner (September HVAC) (General, Content)", type: "content" }
+                        ],
+                        "Wednesday": [
+                            { text: "Coordinate September Direct Mail Send-off (C, Planning)", type: "email" },
+                            { text: "Review September Store Screen Deployment (Walk-ins, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize September Email Series Part 1 (General, Review)", type: "email" },
+                            { text: "Review September Social Media Plan (Overall, Social)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Distribute August Final Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Prepare for September Week 1 (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Monthly Review Meeting Prep (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "September Asset Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Wednesday": [ { text: "Direct Mail Final Check (C, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Content Creation (Overall, Social)", type: "social" } ],
+                        "Friday": [ { text: "Monthly Wrap-up (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-09-01": { // Week starting Monday, September 1, 2025 (Extrapolated for September)
+                campaignTitle: "September Campaign: HVAC Service Focus",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "HVAC Service Guide (September)", deadline: "Sept 3, 2025", progress: 90, review: "Sept 2", deploy: "Sept 3" },
+                    { type: "Website Banner (HVAC)", deadline: "Sept 2, 2025", progress: 85, review: "Sept 1", deploy: "Sept 2" },
+                    { type: "Email Series Part 1 (HVAC)", deadline: "Sept 4, 2025", progress: 70, review: "Sept 3", deploy: "Sept 4" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Deploy HVAC Service Guide (General, Content)", type: "content" },
+                            { text: "Update Store Screens (HVAC) (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: HVAC System Check (General, Direct)", type: "email" },
+                            { text: "FB Post: Heater Core Focus (General, Informative)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Draft September Direct Mail Content (C, Inviting)", type: "email" },
+                            { text: "Review HVAC Email Series (General, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: HVAC Benefits (General, Confident)", type: "email" },
+                            { text: "FB Post: HVAC Maintenance Tips (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review Weekly Metrics (September) (Overall, Analytics)", type: "analytics" },
+                            { text: "Prepare next week's HVAC content (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Coordinate HVAC Guide Distribution (General, Planning)", type: "planning" },
+                            { text: "Prepare In-store HVAC signage (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Email Performance (HVAC) (Overall, Analytics)", type: "analytics" },
+                            { text: "Respond to Social Media Inquiries (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review September Direct Mail Draft (C, Review)", type: "review" },
+                            { text: "Plan September Direct Mail Send-off (C, Planning)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize HVAC Email Series Part 2 (General, Review)", type: "email" },
+                            { text: "Analyze FB Ad Performance (HVAC) (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile September Mid-Month Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Prep for next week's content (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "HVAC Campaign Asset Review (Overall, Review)", type: "review" } ],
+                        "Tuesday": [ { text: "Email Content Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Wednesday": [ { text: "Direct Mail Proofing (C, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Strategy Review (Overall, Social)", type: "social" } ],
+                        "Friday": [ { text: "Weekly Performance Review (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-09-08": { // Week starting Monday, September 8, 2025 (Extrapolated for September)
+                campaignTitle: "September Campaign: HVAC Service Focus (Cont.)",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "Email Series Part 2 (HVAC)", deadline: "Sept 11, 2025", progress: 80, review: "Sept 10", deploy: "Sept 11" },
+                    { type: "Direct Mail (C-Tier) Deployment", deadline: "Sept 12, 2025", progress: 95, review: "Sept 11", deploy: "Sept 12" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Review HVAC Campaign Metrics (Overall, Analytics)", type: "analytics" },
+                            { text: "Plan Heater Core FB Live (General, Social)", type: "social" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: Heater Core Focus (General, Direct)", type: "email" },
+                            { text: "FB Post: Heater Core Walkthrough (General, Informative)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize Direct Mail Deployment (C, Planning)", type: "email" },
+                            { text: "Analyze Email Series Part 1 (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: HVAC Special Offer (General, Confident)", type: "email" },
+                            { text: "FB Post: Customer Testimonial (HVAC) (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review September Mid-Month ROI (Overall, Analytics)", type: "analytics" },
+                            { text: "Prep for next month's campaign planning (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Update Website Banners (HVAC Offers) (General, Content)", type: "content" },
+                            { text: "Prepare In-store HVAC offers (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Email Engagement (HVAC) (Overall, Analytics)", type: "analytics" },
+                            { text: "Engage with FB Comments (Heater Core) (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Confirm Direct Mail Delivery (C, Analytics)", type: "email" },
+                            { text: "Review HVAC Service Guide Performance (General, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize HVAC Email Series Part 3 (General, Review)", type: "email" },
+                            { text: "Review Social Media Campaign Performance (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile September Performance Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline October Campaign (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Direct Mail Response Analysis (C, Analytics)", type: "analytics" } ],
+                        "Tuesday": [ { text: "Email Content Optimization (Overall, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "HVAC Guide Feedback (General, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Ad Campaign Optimization (Overall, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Monthly Performance Report (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-09-15": { // Week starting Monday, September 15, 2025 (Extrapolated for September)
+                campaignTitle: "September Campaign: HVAC Service Focus (Wrap-up) & October Prep",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "September Campaign Performance Report", deadline: "Sept 19, 2025", progress: 60, review: "Sept 18", deploy: "N/A" },
+                    { type: "October Campaign Outline", deadline: "Sept 20, 2025", progress: 40, review: "Sept 19", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Final September Campaign Analytics (Overall, Analytics)", type: "analytics" },
+                            { text: "Begin October Campaign Planning (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Draft October Service Email Part 1 (General, Direct)", type: "email" },
+                            { text: "FB Post: HVAC Recap (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Review October Campaign Outline (Overall, Review)", type: "review" },
+                            { text: "Coordinate October Direct Mail (C, Planning)", type: "email" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: October Service Preview (General, Welcoming)", type: "email" },
+                            { text: "FB Post: October Campaign Teaser (General, Inviting)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Compile September Performance Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Finalize October Kick-off Plan (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare September ROI Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline October Website Banner content (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review October Email Drafts (General, Review)", type: "review" },
+                            { text: "Update Website Banner (October Preview) (General, Content)", type: "content" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize October Campaign Messaging (Overall, Review)", type: "review" },
+                            { text: "Prepare October Store Screens (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Review October Service Guide Draft (General, Review)", type: "review" },
+                            { text: "Plan October Social Media Calendar (Overall, Social)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Distribute September Summary to Management (Overall, Analytics)", type: "analytics" },
+                            { text: "Set up October Tracking (Overall, Analytics)", type: "analytics" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Next Month's Strategy Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "October Asset Review (Overall, Review)", type: "review" } ],
+                        "Wednesday": [ { text: "Campaign Strategy Refinement (Overall, Planning)", type: "planning" } ],
+                        "Thursday": [ { text: "Ad Performance Review (Overall, Analytics)", type: "analytics" } ],
+                        "Friday": [ { text: "Weekend Prep (Overall, Planning)", type: "planning" } ]
+                    }
+                }
+            },
+            "2025-09-22": { // Week starting Monday, September 22, 2025 (Extrapolated for September)
+                campaignTitle: "September Campaign: HVAC Final & October Kick-off Prep",
+                campaignStatus: "Active",
+                assets: [
+                    { type: "September Final Performance Report", deadline: "Sept 26, 2025", progress: 70, review: "Sept 25", deploy: "N/A" },
+                    { type: "October Service Guide Finalization", deadline: "Sept 27, 2025", progress: 60, review: "Sept 26", deploy: "N/A" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Review September Final Metrics (Overall, Analytics)", type: "analytics" },
+                            { text: "Kick-off October Campaign (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: September Wrap-up/October Tease (General, Welcoming)", type: "email" },
+                            { text: "FB Post: September Highlights (General, Direct)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize October Direct Mail Content (C, Inviting)", type: "email" },
+                            { text: "Prepare October Store Screens (Walk-ins, Content)", type: "content" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: October Service Introduction (General, Confident)", type: "email" },
+                            { text: "FB Post: October Benefits (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Compile September Final Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Set up October Campaign Tracking (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare September Campaign Summary for Leadership (Overall, Analytics)", type: "analytics" },
+                            { text: "Outline October Website Content (General, Content)", type: "content" }
+                        ],
+                        "Tuesday": [
+                            { text: "Review October Email Drafts (General, Review)", type: "review" },
+                            { text: "Update Website Banner (October) (General, Content)", type: "content" }
+                        ],
+                        "Wednesday": [
+                            { text: "Coordinate October Direct Mail Send-off (C, Planning)", type: "email" },
+                            { text: "Review October Store Screen Deployment (Walk-ins, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize October Email Series Part 1 (General, Review)", type: "email" },
+                            { text: "Review October Social Media Plan (Overall, Social)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Distribute September Final Report (Overall, Analytics)", type: "analytics" },
+                            { text: "Prepare for October Week 1 (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "Monthly Review Meeting Prep (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "October Asset Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Wednesday": [ { text: "Direct Mail Final Check (C, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Content Creation (Overall, Social)", type: "social" } ],
+                        "Friday": [ { text: "Monthly Wrap-up (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            },
+            "2025-09-29": { // Week starting Monday, September 29, 2025 (Extrapolated for September, partial week)
+                campaignTitle: "October Campaign: Initial Kick-off",
+                campaignStatus: "Planning",
+                assets: [
+                    { type: "October Service Guide", deadline: "Oct 2, 2025", progress: 80, review: "Oct 1", deploy: "Oct 2" },
+                    { type: "Website Banner (October)", deadline: "Sept 30, 2025", progress: 75, review: "Sept 30", deploy: "Sept 30" }
+                ],
+                schedule: {
+                    "Morning (7:30 AM - 12:00 PM)": {
+                        "Monday": [
+                            { text: "Deploy October Website Banner (General, Content)", type: "content" },
+                            { text: "Kick-off October Campaign (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Email: October Service Intro (General, Direct)", type: "email" },
+                            { text: "FB Post: October Campaign Launch (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Finalize October Service Guide (General, Content)", type: "content" },
+                            { text: "Review October Direct Mail Plan (C, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Email: October Benefits (General, Confident)", type: "email" },
+                            { text: "FB Post: October Maintenance Tips (General, Welcoming)", type: "social" }
+                        ],
+                        "Friday": [
+                            { text: "Review October Week 1 Metrics (Overall, Analytics)", type: "analytics" },
+                            { text: "Plan October Week 2 Activities (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Lunch Break (12:00 PM - 1:00 PM)": {},
+                    "Afternoon (1:00 PM - 4:40 PM)": {
+                        "Monday": [
+                            { text: "Prepare October Store Screens (Walk-ins, Content)", type: "content" },
+                            { text: "Coordinate October Campaign Launch (Overall, Planning)", type: "planning" }
+                        ],
+                        "Tuesday": [
+                            { text: "Monitor Email Performance (October) (Overall, Analytics)", type: "analytics" },
+                            { text: "Engage with FB Comments (October) (General, Social)", type: "social" }
+                        ],
+                        "Wednesday": [
+                            { text: "Coordinate October Service Guide Distribution (General, Planning)", type: "planning" },
+                            { text: "Review October Store Screen Deployment (Walk-ins, Review)", type: "review" }
+                        ],
+                        "Thursday": [
+                            { text: "Finalize October Email Series Part 2 (General, Review)", type: "email" },
+                            { text: "Analyze FB Ad Performance (October) (Overall, Analytics)", type: "analytics" }
+                        ],
+                        "Friday": [
+                            { text: "Compile October Week 1 Summary (Overall, Analytics)", type: "analytics" },
+                            { text: "Prepare for October Week 2 (Overall, Planning)", type: "planning" }
+                        ]
+                    },
+                    "Evening (4:40 PM onwards)": {
+                        "Monday": [ { text: "October Campaign Kick-off Review (Overall, Planning)", type: "planning" } ],
+                        "Tuesday": [ { text: "October Asset Brainstorm (Overall, Planning)", type: "planning" } ],
+                        "Wednesday": [ { text: "Service Guide Final Check (General, Review)", type: "review" } ],
+                        "Thursday": [ { text: "Social Media Content Creation (Overall, Social)", type: "social" } ],
+                        "Friday": [ { text: "Weekly Wrap-up (Overall, Analytics)", type: "analytics" } ]
+                    }
+                }
+            }
+        };
+
+        // --- JavaScript Logic ---
+        let currentWeekStart = new Date('2025-07-07T00:00:00'); // Start date for the calendar (July 8th is Monday)
+        const calendarGrid = document.getElementById('calendarGrid');
+        const currentCampaignTitle = document.getElementById('currentCampaignTitle');
+        const currentCampaignStatus = document.getElementById('currentCampaignStatus');
+        const assetTimeline = document.getElementById('assetTimeline');
+
         function changeWeek(direction) {
             currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
-            updateWeekDisplay();
+            renderCalendar(); // Re-render the calendar for the new week
         }
         
         function updateWeekDisplay() {
             const weekStart = new Date(currentWeekStart);
-            // Ensure the week starts on a Monday if currentWeekStart is manipulated
-            // For now, assuming currentWeekStart is already set to the start of the week.
-            // If you want robust "find next Monday" logic, it's more complex.
-            // For this specific request, we set currentWeekStart to 2025-07-07 (a Monday for 2025-07-08 week).
+            // Adjust weekStart to be the actual Monday of the week
+            weekStart.setDate(weekStart.getDate() + (1 - weekStart.getDay() + 7) % 7); // Ensure it's Monday (getDay() returns 0 for Sunday, 1 for Monday)
 
             const weekEnd = new Date(weekStart);
-            weekEnd.setDate(weekEnd.getDate() + 6); // Add 6 days to get to Sunday
-
-            // If currentWeekStart is actually a Sunday (from initial setting) and you want Monday to be the displayed start:
-            if (weekStart.getDay() !== 1) { // 1 is Monday
-                weekStart.setDate(weekStart.getDate() + (1 - weekStart.getDay() + 7) % 7);
-                weekEnd.setDate(weekStart.getDate() + 6);
-            }
+            weekEnd.setDate(weekEnd.getDate() + 4); // Add 4 days to get to Friday (M-F work week)
             
             const startStr = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             const endStr = weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             
             document.getElementById('currentWeek').textContent = `Week of ${startStr} - ${endStr}, ${weekStart.getFullYear()}`;
         }
-        
-        function toggleCheck(checkbox) {
-            checkbox.classList.toggle('checked');
+
+        function renderCalendar() {
+            // Clear existing calendar content (except headers)
+            // The number of headers changed from 8 to 6, so adjust the loop condition
+            while (calendarGrid.children.length > 6) { // Keep the first 6 (Time + 5 days)
+                calendarGrid.removeChild(calendarGrid.lastChild);
+            }
+
+            const weekKey = currentWeekStart.toISOString().split('T')[0].substring(0, 10); // Get YYYY-MM-DD
+            const weekData = CAMPAIGN_DATA[weekKey];
+
+            if (!weekData) {
+                // Display a message if no data for the current week
+                const noDataRow = document.createElement('div');
+                noDataRow.style.gridColumn = '1 / -1'; // Span all columns
+                noDataRow.style.textAlign = 'center';
+                noDataRow.style.padding = '20px';
+                noDataRow.style.backgroundColor = '#f8f8f8';
+                noDataRow.style.color = '#777';
+                noDataRow.textContent = 'No detailed campaign data available for this week. Please use the navigation buttons.';
+                calendarGrid.appendChild(noDataRow);
+
+                // Clear campaign tracker if no data
+                currentCampaignTitle.textContent = "No Campaign Data";
+                currentCampaignStatus.textContent = "";
+                currentCampaignStatus.className = "campaign-status"; // Reset class
+                assetTimeline.innerHTML = "";
+                updateWeekDisplay(); // Still update week display
+                return;
+            }
+
+            // Render Time Slots and Tasks
+            const timeSlots = ["Morning (7:30 AM - 12:00 PM)", "Lunch Break (12:00 PM - 1:00 PM)", "Afternoon (1:00 PM - 4:40 PM)", "Evening (4:40 PM onwards)"];
+            const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+            
+            timeSlots.forEach(slot => {
+                // Time Slot Label
+                const timeSlotDiv = document.createElement('div');
+                timeSlotDiv.className = 'time-slot';
+                timeSlotDiv.textContent = slot;
+                calendarGrid.appendChild(timeSlotDiv);
+
+                // Daily Cells
+                daysOfWeek.forEach(day => {
+                    const cell = document.createElement('div');
+                    cell.className = 'calendar-cell';
+                    const tasks = weekData.schedule[slot] ? weekData.schedule[slot][day] || [] : [];
+                    tasks.forEach(task => {
+                        const taskItem = document.createElement('div');
+                        taskItem.className = `task-item ${task.type}`;
+                        // Include tier and tone in the task text
+                        let taskText = task.text;
+                        if (task.tier) {
+                            taskText += ` (Tier: ${task.tier})`;
+                        }
+                        if (task.tone) {
+                            taskText += ` (Tone: ${task.tone})`;
+                        }
+                        taskItem.textContent = taskText;
+
+                        // Attach event listener for editing task details
+                        taskItem.addEventListener('click', function(event) {
+                            event.stopPropagation(); // Prevent cell click if task clicked
+                            const newDetails = prompt('Edit task details:', this.textContent);
+                            if (newDetails) {
+                                this.textContent = newDetails;
+                                // In a full app, you'd save this back to CAMPAIGN_DATA and localStorage
+                            }
+                        });
+                        cell.appendChild(taskItem);
+                    });
+                    calendarGrid.appendChild(cell);
+                });
+            });
+
+            // Update Campaign Tracker
+            currentCampaignTitle.textContent = weekData.campaignTitle;
+            currentCampaignStatus.textContent = weekData.campaignStatus;
+            currentCampaignStatus.className = `campaign-status status-${weekData.campaignStatus.toLowerCase().replace(' ', '')}`;
+            
+            assetTimeline.innerHTML = ''; // Clear previous assets
+            weekData.assets.forEach(asset => {
+                const assetCard = document.createElement('div');
+                assetCard.className = 'asset-card';
+                assetCard.innerHTML = `
+                    <div class="asset-type">${asset.type}</div>
+                    <div class="asset-deadline">Due: ${asset.deadline}</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${asset.progress}%"></div>
+                    </div>
+                    <div>Review: ${asset.review} | Deploy: ${asset.deploy}</div>
+                `;
+                assetTimeline.appendChild(assetCard);
+            });
+
+            updateWeekDisplay();
+        }
+
+        // --- Checklist Persistence (localStorage) ---
+        function saveTasks() {
+            const checklistItems = document.querySelectorAll('.checklist-item');
+            const tasks = [];
+            checklistItem.forEach(item => {
+                const textElement = item.querySelector('div:last-child');
+                if (textElement) {
+                    const text = textElement.textContent;
+                    const isChecked = item.querySelector('.checkbox').classList.contains('checked');
+                    tasks.push({ text: text, checked: isChecked });
+                }
+            });
+            localStorage.setItem('myMarketingChecklist', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('myMarketingChecklist');
+            if (savedTasks) {
+                const tasks = JSON.parse(savedTasks);
+                const checklistContainer = document.querySelector('.checklist');
+                const addTaskBtn = document.querySelector('.add-task-btn');
+
+                // Remove default checklist items before loading saved ones
+                // This assumes the initial HTML checklist items are meant to be overwritten by saved data
+                checklistContainer.querySelectorAll('.checklist-item').forEach(item => {
+                    // Only remove if it's not the add button
+                    if (!item.querySelector('.add-task-btn')) {
+                        item.remove();
+                    }
+                });
+
+
+                tasks.forEach(task => {
+                    const checklistItem = document.createElement('div');
+                    checklistItem.className = 'checklist-item';
+                    checklistItem.innerHTML = `
+                        <div class="checkbox ${task.checked ? 'checked' : ''}" onclick="toggleCheck(this)"></div>
+                        <div>${task.text}</div>
+                    `;
+                    checklistContainer.insertBefore(checklistItem, addTaskBtn);
+                });
+            }
         }
         
         function addTask() {
@@ -654,13 +1483,15 @@
                     <div>${taskText}</div>
                 `;
                 document.querySelector('.checklist').insertBefore(checklistItem, document.querySelector('.add-task-btn'));
+                saveTasks(); // Save state after adding a new task
             }
         }
-        
+
+        // --- Other Functions ---
         function addQuickTask() {
             const task = prompt('Quick task (format: "Task | Channel | Day"):');
             if (task) {
-                alert('Task added to calendar! (In a real implementation, this would add to the appropriate day/channel)');
+                alert('Quick task added! (This feature requires further development to integrate into the calendar grid data.)');
             }
         }
         
@@ -668,18 +1499,12 @@
             alert('Calendar exported! (In a real implementation, this would export to CSV/Excel)');
         }
         
-        // Initialize the calendar
-        updateWeekDisplay();
-        
-        // Add some interactive effects for task-items
-        document.querySelectorAll('.task-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const details = prompt('Task details:', this.textContent);
-                if (details) {
-                    this.textContent = details;
-                }
-            });
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar(); // Render the initial week
+            loadTasks(); // Load checklist tasks
         });
+
     </script>
 </body>
 </html>
